@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myphpapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myphpapp
+  template:
+    metadata:
+      labels:
+        app: myphpapp
+    spec:
+      containers:
+      - name: myphpapp
+        image: spnigam25/myphpapp:latest
+        volumeMounts:
+        - name: custom-dir-secret
+          mountPath: /etc/apache2/conf-available/custom-dir.conf
+          subPath: custom-dir.conf
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: custom-dir-secret
+        secret:
+          secretName: custom-dir-secret
